@@ -34,7 +34,7 @@ func soundHandler(dir string) func(http.ResponseWriter,*http.Request) {
             w.Write([]byte("Play Sound failed :-("))
             return
         }
-        stream, format, err := song(path)
+        stream, format, err := sound(path)
         if err != nil {
             log.Println("Stream sound failed: ", err)
             w.WriteHeader(http.StatusInternalServerError)
@@ -60,7 +60,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     port := flag.Int("p", 8080, "Specifies the listen's port")
-    dir := flag.String("s", "./sounds/", "Specifies the songs's dir")
+    dir := flag.String("s", "./sounds/", "Specifies the sound's dir")
     flag.Parse()
 
     log.Println("Sound directory is", *dir)
@@ -72,7 +72,7 @@ func main() {
     http.ListenAndServe(fmt.Sprintf(":%v",*port), nil)
 }
 
-func song(path string) (s beep.StreamSeekCloser, format beep.Format, err error) {
+func sound(path string) (s beep.StreamSeekCloser, format beep.Format, err error) {
     f, err := os.Open(path)
     if err != nil {
         return nil, beep.Format{}, fmt.Errorf("Error in path %s: ", path, err)
